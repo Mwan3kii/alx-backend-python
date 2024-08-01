@@ -3,7 +3,7 @@
 from typing import Tuple, List, Any
 
 
-def zoom_array(lst: Tuple[Any, ...], factor: int = 2) -> List[Any]:
+def zoom_array(lst: Tuple, factor: int = 2) -> List:
     """Changed to tuple to match the function type annotation"""
     zoomed_in: List[Any] = [
         item for item in lst
