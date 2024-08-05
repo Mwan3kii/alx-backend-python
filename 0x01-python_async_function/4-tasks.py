@@ -22,5 +22,4 @@ async def task_wait_n(n: int, max_delay: int) -> List[float]:
                     break
             else:
                 delay_res.append(delay)
-    
     return delay_res
