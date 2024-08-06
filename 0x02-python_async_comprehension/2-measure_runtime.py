@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Import async_comprehension from the previous file"""
 import asyncio
-import time
+from time import time
 
-async_comprehension = __import__('1_async_comprehension').async_comprehension
+async_comprehension = __import__('1-async_comprehension').async_comprehension
 
 
 async def measure_runtime() -> float:
