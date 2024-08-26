@@ -77,3 +77,10 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(repos, self.expected_repos)
         # Optionally, you could also check for a specific license, like apache2_repos
         self.assertIn(self.apache2_repos[0], repos)
+
+    def test_public_repos_with_license(self):
+        client = GithubOrgClient("test_org")
+        repos = client.public_repos(license="apache-2.0")
+
+        # Assert that the public_repos method returns repos with the apache-2.0 license
+        self.assertEqual(repos, apache2_repos)
