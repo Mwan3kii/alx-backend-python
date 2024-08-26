@@ -3,6 +3,8 @@ import unittest
 from unittest.mock import patch, PropertyMock, Mock
 from parameterized import parameterized
 from client import GithubOrgClient
+from fixtures import org_payload, repos_payload
+from fixtures import expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -38,3 +40,40 @@ class TestGithubOrgClient(unittest.TestCase):
 
         # Check that the result is as expected
         self.assertEqual(result, expected)
+
+
+@parameterized_class([
+    {"org_payload": org_payload, "repos_payload": repos_payload, 
+     "expected_repos": expected_repos, "apache2_repos": apache2_repos}
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Start patching requests.get
+        cls.get_patcher = patch('requests.get')
+        mock_get = cls.get_patcher.start()
+
+        # Define side_effect to return the correct payloads based on the URL
+        def get_json_side_effect(url):
+            if url == f"https://api.github.com/orgs/{cls.org_payload['login']}":
+                return cls.org_payload
+            elif url == cls.org_payload["repos_url"]:
+                return cls.repos_payload
+            return None
+        
+        # Set the side_effect for the mock
+        mock_get.return_value.json.side_effect = get_json_side_effect
+
+    @classmethod
+    def tearDownClass(cls):
+        # Stop patching requests.get
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        client = GithubOrgClient(self.org_payload['login'])
+        repos = client.public_repos()
+
+        # Assert that the public_repos method returns the expected repos
+        self.assertEqual(repos, self.expected_repos)
+        # Optionally, you could also check for a specific license, like apache2_repos
+        self.assertIn(self.apache2_repos[0], repos)
