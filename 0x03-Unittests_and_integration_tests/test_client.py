@@ -52,4 +52,4 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result, check)
 
             mock_public.assert_called_once()
-            mock_json.assert_called_once()    
+            mock_json.assert_called_once()
