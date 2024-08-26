@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Intiatalizes test guthub client class"""
 import unittest
-from unittest.mock import patch, PropertyMock, Mock
+from unittest.mock import patch
 from parameterized import parameterized
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload
-from fixtures import expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
