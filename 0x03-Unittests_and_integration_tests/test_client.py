@@ -43,7 +43,7 @@ class TestGithubOrgClient(unittest.TestCase):
 
 
 @parameterized_class([
-    {"org_payload": org_payload, "repos_payload": repos_payload, 
+    {"org_payload": org_payload, "repos_payload": repos_payload,
      "expected_repos": expected_repos, "apache2_repos": apache2_repos}
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
@@ -53,34 +53,31 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         cls.get_patcher = patch('requests.get')
         mock_get = cls.get_patcher.start()
 
-        # Define side_effect to return the correct payloads based on the URL
         def get_json_side_effect(url):
             if url == f"https://api.github.com/orgs/{cls.org_payload['login']}":
                 return cls.org_payload
             elif url == cls.org_payload["repos_url"]:
                 return cls.repos_payload
             return None
-        
-        # Set the side_effect for the mock
         mock_get.return_value.json.side_effect = get_json_side_effect
 
     @classmethod
     def tearDownClass(cls):
-        # Stop patching requests.get
         cls.get_patcher.stop()
 
     def test_public_repos(self):
         client = GithubOrgClient(self.org_payload['login'])
         repos = client.public_repos()
-
-        # Assert that the public_repos method returns the expected repos
         self.assertEqual(repos, self.expected_repos)
-        # Optionally, you could also check for a specific license, like apache2_repos
         self.assertIn(self.apache2_repos[0], repos)
 
     def test_public_repos_with_license(self):
-        client = GithubOrgClient("test_org")
-        repos = client.public_repos(license="apache-2.0")
+        """test for public repos with License """
+        test_class = GithubOrgClient("google")
 
-        # Assert that the public_repos method returns repos with the apache-2.0 license
-        self.assertEqual(repos, apache2_repos)
+        self.assertEqual(test_class.public_repos(), self.expected_repos)
+        self.assertEqual(test_class.public_repos("XLICENSE"), [])
+        self.assertEqual(test_class.public_repos(
+            "apache-2.0"), self.apache2_repos)
+        self.mock.assert_called()
+
