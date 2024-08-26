@@ -46,6 +46,7 @@ class TestGithubOrgClient(unittest.TestCase):
      "expected_repos": expected_repos, "apache2_repos": apache2_repos}
 ])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Test integration github org client class"""
     @classmethod
     def setUpClass(cls):
         # Start patching requests.get
@@ -53,6 +54,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         mock_get = cls.get_patcher.start()
 
         def get_json_side_effect(url):
+            """Get json side effect funtion"""
             org_url = f"https://api.github.com/orgs/{cls.org_payload['login']}"
             if url == org_url:
                 return cls.org_payload
@@ -63,6 +65,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Tear down class method to test license"""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
