@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+"""Parameterize and patch"""
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized
@@ -7,6 +7,7 @@ from utils import access_nested_map, get_json, memoize
 
 
 class TestAccessNestedMap(unittest.TestCase):
+    """Tests the functions in this class"""
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
@@ -26,6 +27,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
+    """Test the functuons used"""
     @parameterized.expand([
         ("http://example.com", {"payload": True}),
         ("http://holberton.io", {"payload": False}),
