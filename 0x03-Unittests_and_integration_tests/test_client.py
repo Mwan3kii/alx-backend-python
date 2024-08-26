@@ -16,8 +16,8 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_org(self, org_name, mock_get_json):
         client = GithubOrgClient(org_name)
         result = client.org
-
-        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
+        m_url = f"https://api.github.com/orgs/{org_name}"
+        mock_get_json.assert_called_once_with(m_url)
         self.assertEqual(result, {"payload": True})
 
     def test_public_repos_url(self):
@@ -54,7 +54,8 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         mock_get = cls.get_patcher.start()
 
         def get_json_side_effect(url):
-            if url == f"https://api.github.com/orgs/{cls.org_payload['login']}":
+            org_url = f"https://api.github.com/orgs/{cls.org_payload['login']}"
+            if url == org_url:
                 return cls.org_payload
             elif url == cls.org_payload["repos_url"]:
                 return cls.repos_payload
@@ -80,4 +81,3 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         self.assertEqual(test_class.public_repos(
             "apache-2.0"), self.apache2_repos)
         self.mock.assert_called()
-
